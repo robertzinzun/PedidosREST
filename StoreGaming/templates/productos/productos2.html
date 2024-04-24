@@ -1,0 +1,22 @@
+{%extends 'base.html'%}
+{%block contenido %}
+ <div class="row">
+    {% for prod in productos %}
+
+
+    <div class="col-sm-3">
+      <div class="panel panel-primary">
+        <div class="panel-heading">{{prod.nombre}}</div>
+        <div class="panel-body"><img src="{{url_for('productos.consultarFoto',id=prod.idProducto)}}" class="img-responsive" style="height:50px" alt="Image"></div>
+        <div class="panel-footer">
+            Precio $:{{prod.precio}} Stock:{{prod.existencia}}
+            <a href="#"><span class="glyphicon glyphicon-shopping-cart"></span> Comprar</a>
+        </div>
+      </div>
+    </div>
+
+    {%endfor%}
+ </div>
+
+
+{%endblock%}

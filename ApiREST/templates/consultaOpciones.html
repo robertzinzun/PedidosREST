@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>TitulaTEC</title>
+</head>
+<body>
+    <h1>Listado de Opciones</h1>
+    {% if resp['estatus']=='Ok' %}
+    <table>
+        <thead>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Descripcion</th>
+        </thead>
+         {% for o in resp['opciones'] %}
+            <tr>
+                <td>{{o['idOpcion']}}</td>
+                <td>{{o['nombre']}}</td>
+                <td>{{o['descripcion']}}</td>
+            </tr>
+         {% endfor %}
+    </table>
+    {% else %}
+        <p style="color:red">{{resp['mensaje']}}</p>
+    {% endif %}
+
+
+
+</body>
+</html>

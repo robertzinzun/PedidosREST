@@ -1,0 +1,45 @@
+{% extends 'comunes/base.html' %}
+{% block navbar %}
+{% include 'comunes/menu.html' %}
+{% endblock %}
+{% block principal %}
+
+<h1>LISTADO DE PEDIDOS</h1>
+<div class="table-responsive">
+<table class="table table-bordered">
+    <tr class="info text-center">
+        <th>ID</th>
+        <th>COMPRADOR</th>
+        <th>VENDEDOR</th>
+        <th>TARJETA</th>
+        <th>FECHA REGISTRO</th>
+        <th>ESTATUS</th>
+        <th>SUBTOTAL</th>
+        <th>TOTAL</th>
+        <th>Ver</th>
+    </tr>
+    {%if pedidos%}
+        {%for p in pedidos%}
+            <tr>
+                <td>{{p['idPedido']}}</td>
+                <td>{{p.get('comprador')['nombre']}}</td>
+                <td>{{p.get('vendedor')['nombre']}}</td>
+                <td>{{p.get('tarjeta')['noTarjeta']}}</td>
+                <td>{{p['fechaRegistro']}}</td>
+                <td>{{p['estatus']}}</td>
+                <td>${{p['subtotal']}}</td>
+                <td>${{p['totalPagar']}}</td>
+                <td>
+                    <a href="/pedidos/ver/{{p['idPedido']}}">
+                        <span class="glyphicon glyphicon-eye-open"></span>
+                    </a>
+                </td>
+            </tr>
+        {%endfor%}
+    {%endif%}
+</table>
+    <a href="/productos">
+        <span class="btn btn-success glyphicon glyphicon-chevron-left">Regresar</span>
+    </a>
+</div>
+{% endblock %}

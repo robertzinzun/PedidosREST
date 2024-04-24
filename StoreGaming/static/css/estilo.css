@@ -1,0 +1,18 @@
+h6{
+    color:blue;
+}
+header{
+    background-color:rgb(128, 69, 2);
+    text-align:center;
+    height: 100px;
+    margin: 0%;
+    background-image: url('../imagenes/zorro.jpeg');
+    background-repeat: no-repeat;
+    background-size: contain;
+    padding: 25px;
+    color:white;
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+}
+nav{
+    margin:0%
+}

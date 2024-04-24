@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+{% block contenido %}
+<script>
+    function eliminarProducto(id,nombre){
+        document.getElementById("id").value=id;
+        document.getElementById("msg").innerHTML='¿ Estas seguro de eliminar el producto <b>'+nombre+' </b>?';
+    }
+    function eliminar(){
+        var id=document.getElementById("id").value;
+        location.href='/productos/eliminar/'+id;
+    }
+    function verDoc(id,nombre){
+        id=parseInt(id);
+        document.getElementById("titulo").innerHTML='Documento de '+ nombre;
+        document.getElementById("pdf").src="/productos/documento/"+id;
+        //document.getElementById("pdf").data="/productos/documento/"+id;
+    }
+</script>
+<div class="container">
+<div class="page-header">
+    <h1 class="bg-primary text-center">PRODUCTOS</h1>
+</div>
+     {% if current_user.is_authenticated and current_user.is_admin()%}
+    <a href="/productos/nuevo" class="btn btn-default btn-sm">
+          <span class="glyphicon glyphicon-plus-sign"></span> Agregar producto
+    </a>
+    {% endif %}
+    <br>
+    <table class="table table-bordered">
+        <th class="info">Nombre</th>
+        <th class="info">Descripción</th>
+        <th class="info">Categoria</th>
+        <th class="info">Precio</th>
+        <th class="info">Existencia</th>
+        {% if current_user.is_authenticated %}
+            <th class="info">Comprar</th>
+        {% endif %}
+        <th class="info">Foto</th>
+        <th class="info">Especificaciones</th>
+        {% if current_user.is_authenticated and current_user.is_admin()%}
+            <th class="info">Editar</th>
+            <th class="info">Eliminar</th>
+        {% endif %}
+        {% for prod in productos %}
+            <tr>
+                <td>{{prod.nombre}}</td>
+                <td>{{prod.descripcion}}</td>
+                <td>{{prod.categoria.nombre}}</td>
+                <td>${{prod.precio}}</td>
+                <td>{{prod.existencia}}</td>
+                {% if current_user.is_authenticated %}
+                    <td><a href="#"><span class="glyphicon glyphicon-shopping-cart"></span> Comprar</a></td>
+                {% endif %}
+                <td><img src="{{url_for('productos.consultarFoto',id=prod.idProducto)}}" width="60px" height="60px"></td>
+                <td>
+                    <a onclick="verDoc({{prod.idProducto}},'{{prod.nombre}}')" data-toggle="modal" data-target="#Doc">
+                       <span class="glyphicon glyphicon-list-alt"></span> Ver
+                    </a>
+                </td>
+
+                {% if current_user.is_authenticated and current_user.is_admin()%}
+                <td>
+                    <a href="/productos/{{prod.idProducto}}">
+                        <span class="glyphicon glyphicon-edit"></span>
+                    </a>
+                </td>
+                <td>
+                    <a onclick="eliminarProducto({{prod.idProducto}},'{{prod.nombre}}')" data-toggle="modal" data-target="#myModal">
+                        <span class="glyphicon glyphicon-trash"></span>
+                    </a>
+                </td>
+                {% endif %}
+            </tr>
+        {% endfor %}
+    </table>
+    <div id="myModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Eliminación de Productos</h4>
+          </div>
+          <div class="modal-body">
+            <div id="msg"></div>
+          </div>
+          <div class="modal-footer">
+              <input type="hidden" id="id">
+              <button type="button" class="btn btn-default" onclick="eliminar()">
+                 <span class="glyphicon glyphicon-ok-circle"></span> Aceptar
+              </button>
+              <button type="button" class="btn btn-default" data-dismiss="modal">
+                <span class="glyphicon glyphicon-remove-sign"></span> Cancelar
+              </button>
+          </div>
+        </div>
+        </div>
+    </div>
+    <div id="Doc" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 id="titulo" class="modal-title"></h4>
+          </div>
+          <div class="modal-body">
+             <embed id="pdf"  type="application/pdf" width="100%" height="600px" scrollbar="1" toolbar="1" statusbar="1"/>
+            <!--<object id="pdf" type="application/pdf" width="100%" height="600px" typemustmatch="1"></object>-->
+          </div>
+          <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">
+                <span class="glyphicon glyphicon-ok-circle"></span> Aceptar
+              </button>
+          </div>
+        </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

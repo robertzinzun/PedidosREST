@@ -1,0 +1,20 @@
+{% extends 'comunes/base.html' %}
+{% block principal %}
+<br><br>
+<div class="well text-center col-md-6 col-md-offset-3">
+    <h1 >Bienvenido a la tienda SHOPITESZ</h1>
+    <br>
+    <form action="/login" method="post">
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" placeholder="Ingresa tu email" required name="email" class="form-control">
+        </div>
+        <div class="form-group">
+            <label for="password">Contraseña:</label>
+            <input type="password" name="password" placeholder="Ingresa tu password" required class="form-control">
+        </div>
+        <button type="submit" class="btn btn-info">Ingresar</button>
+        <a href="/usuarios/nuevo" class="btn btn-success">Registrar</a>
+    </form>
+</div>
+{% endblock %}

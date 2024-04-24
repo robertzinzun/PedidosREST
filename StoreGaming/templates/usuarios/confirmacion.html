@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block contenido %}
+<div class="page-header">
+    <h1 class="bg-primary text-center">Confirmación de Cuenta</h1>
+</div>
+    <p>Estimado(a) {{user.nombreCompleto}}, gracias por confirmar su cuenta, ahora ya puede disfrutar de los servicios de GamingStore</p>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <a href="/login" class="btn btn-default">
+                    <span class="glyphicon glyphicon-log-in"></span> Iniciar Sesion
+                </a>
+            </div>
+        </div>
+    </form>
+{% endblock %}

@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+Estimado: {{ user.nombreCompleto }},
+Bienvenido a <b>GamingStore!</b>
+Para confirmar tu cuenta por favor da click al siguiente enlace:
+{{ url_for('usuarios.confirmar', id=user.idUsuario, _external=True) }}
+Agradecemos su preferencia, atentamente el equipo de <b>GamingStore!</b>
+Nota: Las repuestas a esta dirección de correo no son monitoreadas.
+</body>
+</html>

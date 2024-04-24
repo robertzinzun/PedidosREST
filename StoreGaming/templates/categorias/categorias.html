@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% block contenido %}
+<script>
+    function eliminarCategoria(id,nombre){
+        document.getElementById("id").value=id;
+        document.getElementById("msg").innerHTML='¿ Estas seguro de eliminar la categoria <b>'+nombre+' </b>?';
+    }
+    function eliminar(){
+        var id=document.getElementById("id").value;
+        location.href='/categorias/eliminar/'+id;
+    }
+</script>
+<div class="container">
+<div class="page-header">
+    <h1 class="bg-primary text-center">CATEGORIAS</h1>
+</div>
+     {% if current_user.is_authenticated and current_user.is_admin()%}
+    <a href="/categorias/nueva" class="btn btn-default btn-sm">
+          <span class="glyphicon glyphicon-plus-sign"></span> Agregar categoria
+    </a>
+    {% endif %}
+    <br>
+    <table class="table table-bordered">
+        <th class="info">ID</th>
+        <th class="info">Nombre</th>
+        {% if current_user.is_authenticated and current_user.is_admin()%}
+            <th class="info">Editar</th>
+            <th class="info">Eliminar</th>
+        {% endif %}
+        {% for cat in categorias %}
+            <tr>
+                <td>{{cat.idCategoria}}</td>
+                <td>{{cat.nombre}}</td>
+                {% if current_user.is_authenticated and current_user.is_admin()%}
+                <td>
+                    <a href="/categorias/{{cat.idCategoria}}">
+                        <span class="glyphicon glyphicon-edit"></span>
+                    </a>
+                </td>
+                <td>
+                    <a onclick="eliminarCategoria({{cat.idCategoria}},'{{cat.nombre}}')" data-toggle="modal" data-target="#myModal">
+                        <span class="glyphicon glyphicon-trash"></span>
+                    </a>
+                </td>
+                {% endif %}
+            </tr>
+        {% endfor %}
+    </table>
+    <div id="myModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Eliminación de Categorias</h4>
+          </div>
+          <div class="modal-body">
+            <div id="msg"></div>
+          </div>
+          <div class="modal-footer">
+              <input type="hidden" id="id">
+              <button type="button" class="btn btn-default" onclick="eliminar()">
+                 <span class="glyphicon glyphicon-ok-circle"></span> Aceptar
+              </button>
+              <button type="button" class="btn btn-default" data-dismiss="modal">
+                <span class="glyphicon glyphicon-remove-sign"></span> Cancelar
+              </button>
+          </div>
+        </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

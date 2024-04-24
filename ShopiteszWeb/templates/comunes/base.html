@@ -1,0 +1,41 @@
+{% extends 'bootstrap/base.html'%}
+{% block styles %}
+    {{super()}}
+    <style>
+        body{
+            background-image:url("{{url_for('static',filename='imagenes/fondo.jpg')}}");
+            background-size:cover;
+
+            opacity:0.9;
+        }
+    </style>
+{% endblock %}
+{% block body %}
+{% block scripts %}
+    {{super()}}
+{% endblock %}
+<div class="bg-info text-center">
+      <div class="row">
+          <div class="col-md-2">
+              <img src="{{url_for('static',filename='imagenes/zorro.jpeg')}}">
+          </div>
+          <div class="col-md-8">
+            <h1>SHOPITESZ</h1>
+            <p>"TIENDA EN LINEA DEL ITESZ"</p>
+          </div>
+          <div class="col-md">
+               <img src="{{url_for('static',filename='imagenes/tec.jpeg')}}">
+          </div>
+      </div>
+</div>
+{% block navbar %}
+{% endblock %}
+{% block content %}
+<div class="container-fluid well">
+    <div class="text-center">
+        {% block principal%}
+        {% endblock %}
+    </div>
+</div>
+{% endblock %}
+{% endblock %}

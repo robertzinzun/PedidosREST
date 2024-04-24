@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>TitulaTEC</title>
+</head>
+<body>
+    {%if current_user.is_authenticated %}
+        <p>Alumno:{{resp['solicitud'].get('alumno').get('nombre')}}</p>
+    {% else %}
+        <p>No hay sesion activa </p>
+    {% endif %}
+</body>
+</html>

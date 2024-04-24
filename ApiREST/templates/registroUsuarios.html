@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% block principal %}
+    <h1 class="bg bg-primary text-center">Registro de Alumnos</h1>
+
+    <form>
+        <div class="form-group">
+            <label>No. Control:</label>
+            <input type="number" class="form-control" name="nocontrol" placeholder="No. de Control" required>
+        </div>
+        <div class="form-group">
+            <label>Nombre:</label>
+            <input type="text" class="form-control" name="nombre" placeholder="Nombre completo del Alumno" required>
+        </div>
+        <div class="form-group">
+            <label>Sexo:</label>
+            <label class="checkbox-inline"><input type="radio" name="sexo" value="F">Femenino</label>
+            <label class="checkbox-inline"><input type="radio" name="sexo" value="M">Masculino</label>
+        </div>
+        <div class="form-group">
+            <label>Telefono:</label>
+            <input type="tel" class="form-control" name="telefono" required placeholder="Telefono">
+        </div>
+        <div class="form-group">
+            <label>Email:</label>
+            <input type="email" class="form-control" name="email" placeholder="Correo Electronico" required>
+        </div>
+        <div class="form-group">
+            <label>Password:</label>
+            <input type="password" class="form-control" name="password" required placeholder="Password">
+        </div>
+        <div class="form-group">
+            <label>Año de Egreso:</label>
+            <input type="number" class="form-control" name="anioEgreso" placeholder="Año de Egreso" min="1994">
+        </div>
+        <div class="form-group">
+            <label>Creditos:</label>
+            <input type="number" class="form-control" name="creditos" placeholder="Creditos" required>
+        </div>
+        <div class="form-group">
+            <label>ID Carrera:</label>
+            <input type="number" class="form-control" required placeholder="ID Carrera" name="idCarrera">
+        </div>
+        <div class="form-group">
+            <label>Nombre de Carrera:</label>
+            <input type="text" name="carrera" class="form-control" placeholder="Nombre de la Carrera">
+        </div>
+        <div class="form-group">
+            <input type="submit" value="Registrar" class="btn btn-info">
+            <a class="btn btn-info" href="/">Regresar</a>
+        </div>
+    </form>
+{% endblock %}

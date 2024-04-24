@@ -1,0 +1,32 @@
+<nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <div class="collapse navbar-collapse" id="myNavbar">
+      <ul class="nav navbar-nav">
+        <li class="active"><a href="/principal"><span class="glyphicon glyphicon-home"></span></a></li>
+        {% if session.get('usuario')['tipo']=='Comprador' %}
+          <li><a href="/productos">Productos</a></li>
+        {% endif %}
+        <li><a href="/pedidos">Pedidos</a></li>
+      </ul>
+
+      <ul class="nav navbar-nav navbar-right">
+        <!-- if para comprobar los-->
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#"><span class="glyphicon glyphicon-user"></span> {{session.get('usuario')['nombre']}}
+          <span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/usuarios/cerrarSesion"><span class="glyphicon glyphicon-log-out"></span> Cerrar Sesión</a></li>
+          </ul>
+          <!-- else -->
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>

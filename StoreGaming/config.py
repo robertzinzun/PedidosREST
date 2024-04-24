@@ -1,0 +1,10 @@
+SECRET_KEY='Cl4v3$3gur4PrograW3b'
+DEBUG=True
+SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://userBS:Hola123@localhost/BikeStore'
+SQLALCHEMY_TRACK_MODIFICATIONS = False
+MAIL_SERVER='smtp.googlemail.com'
+MAIL_PORT=587
+MAIL_USE_TLS=True
+MAIL_USERNAME='rsuarez@accitesz.com'
+MAIL_PASSWORD='roferrino'
+FLASKY_MAIL_SENDER = 'GamingStore Admin <rsuarez@accitesz.com>'

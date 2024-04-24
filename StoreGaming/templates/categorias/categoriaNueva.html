@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block contenido %}
+
+<div class="container">
+<div class="page-header">
+    <h1 class="bg-primary text-center">REGISTRO DE CATEGORIAS</h1>
+</div>
+    <form action="/categorias/insertar" method="post" class="form-horizontal">
+        <div class="form-group">
+            <label class="control-label col-sm-2">Nombre:</label>
+            <div class="col-sm-6">
+                <input type="text" name="nombre" class="form-control" required>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <a href="/categorias" class="btn btn-default">
+                    <span class="glyphicon glyphicon-arrow-left"></span> Regresar
+                </a>
+                <button type="submit" class="btn btn-default">
+                    <span class="glyphicon glyphicon-floppy-disk"></span> Guardar
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}

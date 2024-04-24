@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% block contenido %}
+
+<div class="container">
+<div class="page-header">
+    <h1 class="bg-primary text-center">EDICION DE PRODUCTOS</h1>
+</div>
+    <form action="/productos/insertar" method="post" class="form-horizontal" enctype="multipart/form-data">
+        <div class="form-group">
+            <label class="control-label col-sm-2">Nombre:</label>
+            <div class="col-sm-6">
+                <input type="text" name="nombre" class="form-control" required maxlength="50">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-sm-2">Descripción:</label>
+            <div class="col-sm-6">
+                <input type="text" name="descripcion" class="form-control" required maxlength="100">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-sm-2">Precio: $</label>
+            <div class="col-sm-6">
+                <input type="number" name="precio" class="form-control" required min="1">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-sm-2">Existencia:</label>
+            <div class="col-sm-6">
+                <input type="number" name="existencia" class="form-control" required min="1">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-sm-2">Foto:</label>
+            <div class="col-sm-6">
+                <input type="file" name="foto" class="form-control" required>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-sm-2">Especificaciones:</label>
+            <div class="col-sm-6">
+                <input type="file" name="especificaciones" class="form-control" required>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-sm-2">Categoria:</label>
+            <div class="col-sm-6">
+                <select name="categoria">
+                    {% for cat in categorias %}
+                        <option value="{{cat.idCategoria}}">{{cat.nombre}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <a href="/categorias" class="btn btn-default">
+                    <span class="glyphicon glyphicon-arrow-left"></span> Regresar
+                </a>
+                <button type="submit" class="btn btn-default">
+                    <span class="glyphicon glyphicon-floppy-disk"></span> Guardar
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+{% block contenido %}
+<script>
+    function init(id,nombre){
+        document.getElementById("resetP").style.display='none';
+    }
+</script>
+<div class="page-header">
+    <h1 class="bg-primary text-center">EDICION DE USUARIOS</h1>
+</div>
+    <form action="/usuarios/guardar" method="post" class="form-horizontal">
+        <div class="form-group">
+            <label class="control-label col-sm-2">ID:</label>
+            <div class="col-sm-6">
+                <input type="number" name="id" required class="form-control" value="{{usuario.idUsuario}}" readonly>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-sm-2">Nombre completo:</label>
+            <div class="col-sm-6">
+                <input type="text" name="nombre" required class="form-control" value="{{usuario.nombreCompleto}}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-sm-2">Correo Electronico:</label>
+            <div class="col-sm-6">
+                <input type="email" required name="email" class="form-control" value="{{usuario.email}}" readonly>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-sm-2">Dirección:</label>
+            <div class="col-sm-6">
+                <input type="text" name="direccion" required class="form-control" value="{{usuario.direccion}}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-sm-2">Telefono:</label>
+            <div class="col-sm-6">
+                <input type="text" name="telefono" required class="form-control" value="{{usuario.telefono}}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-sm-2">Estatus:</label>
+            <div class="col-sm-1">
+                {% if usuario.estatus=='A' %}
+                    <input type="checkbox" name="estatus"  class="form-control" checked value="A">
+                {% else %}
+                    <input type="checkbox" name="estatus"  class="form-control" value="A">
+                {% endif %}
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-sm-2">Tipo:</label>
+            <div class="col-sm-6">
+                <select name="tipo">
+                    {% if usuario.tipo=='A' %}
+                        <option selected value="A">Administrador</option>
+                    {% else %}
+                         <option value="A">Administrador</option>
+                    {% endif %}
+                    {% if usuario.tipo=='C' %}
+                        <option selected value="C">Cliente</option>
+                    {% else %}
+                         <option value="C">Cliente</option>
+                    {% endif %}
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-sm-2"></label>
+            <div class="col-sm-6">
+                 <a href="#password" class="btn btn-danger" data-toggle="collapse">Resetear Password</a>
+            </div>
+        </div>
+        <div id="password" class="collapse">
+                <div class="form-group">
+                    <label class="control-label col-sm-2">Password</label>
+                    <div class="col-sm-6">
+                        <input type="password"  name="password">
+                    </div>
+                </div>
+        </div>
+
+        <div class="col-sm-offset-2">
+        {%if msg!=None %}
+            {% if msg['estatus']=='ok' %}
+                <div class="alert alert-success col-sm-7">
+                    <p class="text-center"><span class="glyphicon glyphicon-ok"></span> {{msg['value']}}</p>
+                </div>
+            {% else %}
+            <div class="alert alert-danger col-sm-7">
+                <p class="text-center"><span class="glyphicon glyphicon-alert"></span> {{msg['value']}}</p>
+            </div>
+            {% endif %}
+        {% endif %}
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <a href="/usuarios" class="btn btn-default">
+                    <span class="glyphicon glyphicon-arrow-left"></span> Regresar
+                </a>
+                <button type="submit" class="btn btn-default">
+                    <span class="glyphicon glyphicon-floppy-disk"></span> Guardar
+                </button>
+            </div>
+        </div>
+    </form>
+{% endblock %}

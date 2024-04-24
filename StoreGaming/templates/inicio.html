@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% block contenido %}
+<div class="container">
+  <div class="row">
+    <div class="col-sm-6">
+      <div class="panel panel-primary">
+        <div class="panel-heading">CATEGORIAS</div>
+        <div class="panel-body"><img src="{{url_for('static',filename='imagenes/categorias.jpg')}}" class="img-responsive"  style="width:100%"  alt="Image"></div>
+        <div class="panel-footer">Listado de las principales categorias de videojuegos</div>
+      </div>
+    </div>
+    <div class="col-sm-6">
+      <div class="panel panel-danger">
+        <div class="panel-heading">PRODUCTOS</div>
+        <div class="panel-body"><img src="{{url_for('static',filename='imagenes/productos.jpg')}}" class="img-responsive"   style="width:100%" alt="Image"></div>
+        <div class="panel-footer">Listado de los principales titulos de videojuegos</div>
+      </div>
+    </div>
+
+  </div>
+</div><br>
+
+<div class="container">
+  <div class="row">
+    {% if current_user!=None %}
+    <div class="col-sm-6">
+      <div class="panel panel-info">
+        <div class="panel-heading">CLIENTES</div>
+        <div class="panel-body"><img src="{{url_for('static',filename='imagenes/clientes.png')}}" class="img-responsive" style="width:100%" alt="Image"></div>
+        <div class="panel-footer">Buy 50 mobiles and get a gift card</div>
+      </div>
+    </div>
+    {% endif %}
+    <div class="col-sm-6">
+      <div class="panel panel-success">
+        <div class="panel-heading">VENTAS</div>
+        <div class="panel-body"><img src="{{url_for('static',filename='imagenes/ventas.png')}}" class="img-responsive" style="width:100%" alt="Image"></div>
+        <div class="panel-footer">Buy 50 mobiles and get a gift card</div>
+      </div>
+    </div>
+  </div>
+</div><br><br>
+
+<footer class="container-fluid text-center">
+  <p>Online Store Copyright</p>
+  <form class="form-inline">Get deals:
+    <input type="email" class="form-control" size="50" placeholder="Email Address">
+    <button type="button" class="btn btn-danger">Sign Up</button>
+  </form>
+</footer>
+{% endblock %}

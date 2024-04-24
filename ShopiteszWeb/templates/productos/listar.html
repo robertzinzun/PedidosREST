@@ -1,0 +1,77 @@
+{% extends 'comunes/base.html' %}
+{% block navbar %}
+{% include 'comunes/menu.html' %}
+{% endblock %}
+{% block scripts %}
+    {{super()}}
+    <script src="{{url_for('static',filename='js/productos.js')}}"></script>
+{% endblock %}
+{% block principal %}
+<br>
+<div class="container">
+    <div class="row">
+        {% for prod in productos %}
+        <div class="col-sm-4">
+            <div class="panel panel-primary">
+                <div class="panel-heading" id="prod{{prod['idProducto']}}">{{prod["nombre"]}}</div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <img src="/productos/imagen/{{prod['idProducto']}}" class="img-responsive" style="height:150px;width:150px" alt="Image">
+                        </div>
+                        <div class="col-sm-6">
+                            <p><b>Precio:$</b><label id="prec{{prod['idProducto']}}">{{prod["precio"]}}</label></p>
+                            <p><b>Existencia:</b><label id="exis{{prod['idProducto']}}">{{prod['existencia']}}</label></p>
+                            <p><b>Color:</b>{{prod['color']}}</p>
+                            <p><b>Marca:</b>{{prod['marca']}}</p>
+                            <p><b>Vendedor:</b>{{prod.get('vendedor')['nombre']}}</p>
+                            <p><b>Envio:$</b><label id="envio{{prod['idProducto']}}">{{prod['costoEnvio']}}</label></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-footer">
+                    <a data-toggle="modal" data-target="#myModal" onclick="comprar({{prod.idProducto}})"><span class="glyphicon glyphicon-shopping-cart"></span>Comprar</a>
+                    <span class="glyphicon glyphicon-minus" onclick="decrementar({{prod.idProducto}})"></span>
+                    <input type="number" value="1" min="1" max="{{prod.existencia}}" readonly id="cant{{prod.idProducto}}">
+                    <span class="glyphicon glyphicon-plus" onclick="incrementar({{prod.idProducto}})"></span>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+<!-- Modal -->
+<div id="myModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Agregando producto a la Cesta</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <input type="hidden" name="idProducto" id="idProducto">
+                        <p>Producto:<label id="producto"></label></p>
+                        <p>Cantidad:<label id="cantidad"></label></p>
+                        <p>Precio:$<label id="precio"></label></p>
+                        <p>Costo Envio:$<label id="costoE"></label></p>
+                        <p>Subtotal:$<label id="subtotal">1</label></p>
+                        <p>Subtotal Envio:$<label id="subtotalE"></label></p>
+                    </div>
+                    <div class="col-sm-4">
+                        <img id="imagen" src="" class="img-responsive" style="height:150px;width:150px" alt="Image">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" data-dismiss="modal" onclick="carrito()">Aceptar</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

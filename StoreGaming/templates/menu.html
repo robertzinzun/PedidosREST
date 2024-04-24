@@ -1,0 +1,53 @@
+<nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="#">Gaming Store</a>
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+        </div>
+        <ul class="nav navbar-nav">
+          <li class="active"><a href="/"><span class="glyphicon glyphicon-home"></span> Home</a></li>
+          <li><a href="/categorias">Categorias</a></li>
+          {% if current_user.is_authenticated and current_user.is_admin() %}
+            <li><a href="/usuarios">Usuarios</a></li>
+          {% endif %}
+          <li><a href="/productos">Productos</a></li>
+           <li><a href="/productos2">Productos2</a></li>
+          {% if current_user.is_authenticated %}
+            <li><a href="#">Ventas</a></li>
+          {% endif %}
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+
+                {%if current_user.is_authenticated%}
+                <li><a href="#"><span class="glyphicon glyphicon-shopping-cart"></span> Cart</a></li>
+                <li class="dropdown">
+                 <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                     <span class="glyphicon glyphicon-user"></span>{{current_user}}
+                     <span class="caret"></span>
+                 </a>
+                     <ul class="dropdown-menu">
+                      <li>
+                          <a href="/usuarios/editarP">
+                              <span class="glyphicon glyphicon-pencil"></span>
+                              Editar Perfil
+                          </a>
+                      </li>
+                      <li>
+                          <a href="/logout">
+                            <span class="glyphicon glyphicon-log-out"></span> Cerrar sesión
+                          </a>
+                      </li>
+                     </ul>
+                </li>
+
+            {% else %}
+                <li><a href="/login"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+            {% endif %}
+        </ul>
+    </div>
+</nav>

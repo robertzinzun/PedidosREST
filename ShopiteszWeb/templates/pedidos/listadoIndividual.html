@@ -1,0 +1,151 @@
+{% extends 'comunes/base.html' %}
+{% block navbar %}
+{% include 'comunes/menu.html' %}
+{% endblock %}
+{% block scripts %}
+{{super()}}
+<script src="{{url_for('static',filename='js/editarPedido.js')}}"></script>
+{% endblock %}
+{% block principal %}
+<div class="col-md-offset-1">
+<h4>LISTADO DEL PEDIDO</h4>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="row">
+                <label class="col-md-2">ID:</label>
+                <input type="number" readonly value="{{pedido['idPedido']}}" name="idPedido"  id="idPedido" class="col-md-6"/>
+            </div>
+            <div class="row">
+                <label class="col-md-2">Comprador:</label>
+                <input type="text" readonly value="{{pedido.get('comprador')['nombre']}}" class="col-md-6">
+            </div>
+            <div class="row">
+                <label class="col-md-2">Vendedor: </label>
+                <input type="text" readonly value="{{pedido.get('vendedor')['nombre']}}" class="col-md-6">
+            </div>
+            <div class="row">
+                <label class="col-md-2">Fecha Registro: </label>
+                <input type="date" readonly value="{{pedido['fechaRegistro']}}" class="col-md-6">
+            </div>
+            <div class="row">
+                <label class="col-md-2">Tarjeta: </label>
+                <input type="hidden" name="idTarjeta" id="idTarjeta" value="{{pedido.get('tarjeta')['idTarjeta']}}"/>
+                <input type="text" name="noTarjeta" readonly value="{{pedido.get('tarjeta')['noTarjeta']}}" class="col-md-6">
+            </div>
+            <div class="row">
+                <label class="col-md-2">Estatus:</label>
+                <input type="text" readonly value="{{pedido['estatus']}}" class="col-md-6">
+            </div>
+            <div class="row">
+                <label class="col-md-2">Subtotal:</label>
+                <input type="text" readonly value="${{pedido['subtotal']}}" class="col-md-6">
+            </div>
+            <div class="row">
+                <label class="col-md-2">Total:</label>
+                <input type="text" readonly value="${{pedido['totalPagar']}}" class="col-md-6">
+            </div>
+            {%if session.get('usuario')['tipo']=='Comprador' and pedido['estatus']=='Enviado' %}
+                <div class="row">
+                    <p class="col-md-2">Valoracion:<label id="valoracionL">  0</label></p>
+                    <input type="hidden" value="0"  id="valoracion" />
+                    <div class="btn-group" >
+                        <button type="button" name="valoracion" onclick="valorar(1)">
+                            <span class="glyphicon glyphicon-star"></span>
+                        </button>
+                        <button type="button" name="valoracion" onclick="valorar(2)">
+                            <span class="glyphicon glyphicon-star"></span>
+                        </button>
+                        <button type="button" name="valoracion" onclick="valorar(3)">
+                            <span class="glyphicon glyphicon-star"></span>
+                        </button>
+                        <button type="button" name="valoracion" onclick="valorar(4)">
+                            <span class="glyphicon glyphicon-star"></span>
+                        </button>
+                        <button type="button" name="valoracion" onclick="valorar(5)">
+                            <span class="glyphicon glyphicon-star"></span>
+                        </button>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+        <div class="col-md-4">
+            {%if session.get('usuario')['tipo']=='Comprador'%}
+                {%if pedido['estatus']=='Captura'%}
+                    <div class="Row">
+                        <!--<a class="btn btn-danger" href="/pedidos/pagar/{{pedido['idPedido']}}/{{pedido.get('tarjeta')['idTarjeta']}}" onclick="actualizar('Pagado')">Pagar Ahora</a>-->
+                        <button class="btn btn-danger" onclick="actualizar('Pagado')">Pagar Ahora</button>
+                    </div>
+                    <div class="Row">
+                        <a class="btn btn-success" href="/pedidos/cancelar/{{pedido['idPedido']}}">Cancelar Pedido</a>
+                    </div>
+                    <div class="Row">
+                        <a class="btn btn-info" href="/pedidos/nuevoProducto/{{pedido['idPedido']}}/{{pedido.get('vendedor')['idVendedor']}}">
+                            <span class="glyphicon glyphicon-plus"></span>
+                            Agregar producto
+                        </a>
+                    </div>
+                {% else %}
+                    {% if pedido['estatus']=='Enviado' %}
+                        <div class="Row">
+                            <button class="btn btn-danger" onclick="actualizar('Entregado')" >Confirmar Recepcion</button>
+                        </div>
+                        <div class="Row">
+                            <button class="btn btn-success" onclick="actualizar('Disputa')">Abrir Disputa</button>
+                        </div>
+                    {% endif %}
+
+                {% endif %}
+            {% else %}
+                {% if session.get('usuario')['tipo']=='Vendedor'%}
+                    {% if pedido['estatus']=='Pagado' %}
+                        <button class="btn btn-primary" onclick="actualizar('Confirmado')">Confirmar</button>
+                    {% endif %}
+                    {% if pedido['estatus']=='Confirmado' %}
+                        <button class="btn btn-primary" onclick="actualizar('Enviado')">Enviar</button>
+                    {% endif %}
+                    {% if pedido['estatus']=='Entregado' or pedido['estatus']=='Disputa'%}
+                        <button class="btn btn-primary" onclick="actualizar('Finalizado')">Finalizar</button>
+                    {% endif %}
+                {% endif %}
+            {%endif%}
+        </div>
+    </div>
+    <table class="table table-bordered">
+        <caption>Productos:</caption>
+        <tr class="info text-center">
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Precio</th>
+            <th>Cantidad</th>
+            <th>Subtotal</th>
+            <th>Costo Envio</th>
+            <th>Subtotal Envio</th>
+            {% if pedido['estatus']=='Captura'%}
+            <th>Editar</th>
+            {% endif %}
+        </tr>
+        {% for prod in pedido['productos']%}
+        <tr>
+            <td>{{prod['idProducto']}}</td>
+            <td>{{prod['nombre']}}</td>
+            <td>{{prod['precio']}}</td>
+            <td>{{prod['cantidad']}}</td>
+            <td>{{prod['subtotal']}}</td>
+            <td>{{prod['costoEnvio']}}</td>
+            <td>{{prod['subtotalEnvio']}}</td>
+            {% if pedido['estatus']=='Captura'%}
+            <td>
+                <a href="/pedidos/detalle/{{pedido['idPedido']}}/{{prod['idProducto']}}">
+                    <span class="glyphicon glyphicon-edit"></span>
+                </a>
+            </td>
+            {% endif %}
+        </tr>
+        {%endfor%}
+    </table>
+    <a href="/pedidos">
+        <span class="btn btn-info glyphicon glyphicon-chevron-left">Regresar</span>
+    </a>
+</div>
+{% endblock %}
