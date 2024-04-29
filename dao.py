@@ -1,5 +1,5 @@
 from pymongo import MongoClient
-from models import PedidoInsert,PedidoPay
+from models import PedidoInsert,PedidoPay,PedidoCancelado
 from datetime import datetime
 from bson import ObjectId,DatetimeConversion
 from time import strftime
@@ -16,7 +16,7 @@ class Conexion():
         if(pedido.idComprador!=pedido.idVendedor):
             if self.comprobarUsuario(pedido.idComprador,"Comprador")>0 and self.comprobarUsuario(pedido.idVendedor,"Vendedor")>0:
                 ban=True
-                for dp in pedido.detalles:
+                for dp in pedido.detalle:
                     if self.comprobarProducto(dp.idProducto,pedido.idVendedor,dp.cantidad)==0:
                         ban=False
                         break
@@ -80,3 +80,36 @@ class Conexion():
                                          "estatus":"Captura"},
                                         projection={"idComprador":True,"total":True})
         return pedido
+
+    def cancelarPedido(self,idPedido,cancelacion:PedidoCancelado):
+        pedido=self.bd.pedidos.find_one({"_id":ObjectId(idPedido)},
+                                        projection={"estatus":True})
+        resp={"estatus":"","mensaje":""}
+        if pedido:
+            if pedido['estatus']=='Captura' or pedido["estatus"]=='Pagado':
+                res=self.bd.pedidos.update_one({"_id":ObjectId(idPedido)},
+                                               {"$set":cancelacion.dict()})
+                if pedido['estatus']=='Pagado':
+                    self.bd.pedidos.update_one({"_id":ObjectId(idPedido)},
+                                               {"$set":{"pago.estatus":"Devolucion"}})
+                resp["estatus"]="OK"
+                resp["mensaje"]=f"Pedido con id:{idPedido} cancelado con exito"
+            else:
+                resp["estatus"]="Error"
+                resp["mensaje"]="El pedido no se puede cancelar porque se encuentra en proceso"
+        else:
+            resp["estatus"]="Error"
+            resp["mensaje"]="El pedido no existe"
+        return resp
+    def consultaGeneralPedidos(self):
+        resp={"estatus":"","mensaje":""}
+        resultado=self.bd.consultaPedidos.find({})
+        resp["estatus"]="OK"
+        resp["mensaje"]="Listado de Pedidos"
+        lista=[]
+        for ped in resultado:
+            ped["idPedido"]=str(ped['idPedido'])
+            lista.append(ped)
+        resp["pedidos"]=lista
+
+        return resp

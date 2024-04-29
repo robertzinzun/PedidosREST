@@ -1,8 +1,9 @@
 # This is a sample Python script.
 from fastapi import FastAPI
 import uvicorn
-from models import PedidoInsert,PedidoPay
+from models import PedidoInsert,PedidoPay,PedidoCancelado
 from dao import Conexion
+from fastapi.responses import JSONResponse,Response
 # Press ⌃R to execute it or replace it with your code.
 # Press Double ⇧ to search everywhere for classes, files, tool windows, actions, and settings.
 app=FastAPI()
@@ -29,20 +30,21 @@ def agregarPedido(pedido:PedidoInsert):
     salida=app.cn.agregarPedido(pedido)
     return salida
 @app.put('/pedidos/{idPedido}/pagar')
-def pagarPedido(idPedido:str,pedidoPay:PedidoPay):
+def pagarPedido(idPedido:str,pedidoPay:PedidoPay)->Response:
     #return {"mensaje":f"Pagando el pedido con id:{idPedido}"}
     salida=app.cn.pagarPedido(idPedido,pedidoPay)
-    return salida
+    return JSONResponse(content=salida)
 
 @app.delete('/pedidos/{idPedido}/cancelar')
-def candelarPedido(idPedido:str):
-    return {"mensaje":f"Cancelando el pedido con id:{idPedido}"}
+def candelarPedido(idPedido:str,pedido:PedidoCancelado):
+    #return {"mensaje":f"Cancelando el pedido con id:{idPedido}"}
+    salida=app.cn.cancelarPedido(idPedido,pedido)
+    return salida
 
 @app.get('/pedidos')
 def consultaGeneralPedidos():
-    lista=[{"idPedido":"1","total":100},{"idPedido":"2","total":150},
-           {"idPedido":"3","total":200}]
-    return lista
+    salida=app.cn.consultaGeneralPedidos()
+    return salida
 
 
 # Press the green button in the gutter to run the script.

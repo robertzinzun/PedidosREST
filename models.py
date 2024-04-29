@@ -1,5 +1,6 @@
 from pydantic import BaseModel,Field
 from datetime import datetime
+from typing import Optional
 
 class DetallePedido(BaseModel):
     idProducto:int
@@ -17,7 +18,7 @@ class PedidoInsert(BaseModel):
     subtotal:float=Field(...,gt=0)
     total:float=Field(...,gt=0)
     estatus:str=Field(default='Captura')
-    detalles:list[DetallePedido]
+    detalle:list[DetallePedido]
 
 class Pago(BaseModel):
     fecha:datetime=Field(default=datetime.now())
@@ -28,3 +29,7 @@ class Pago(BaseModel):
 class PedidoPay(BaseModel):
     estatus:str=Field(default='Pagado')
     pago:Pago
+
+class PedidoCancelado(BaseModel):
+    estatus:str=Field(default="Cancelado")
+    motivoCancelacion:str
