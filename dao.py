@@ -1,8 +1,7 @@
 from pymongo import MongoClient
 from models import PedidoInsert,PedidoPay,PedidoCancelado
 from datetime import datetime
-from bson import ObjectId,DatetimeConversion
-from time import strftime
+from bson import ObjectId
 class Conexion():
     def __init__(self):
         self.cliente=MongoClient()
@@ -81,8 +80,9 @@ class Conexion():
                                         projection={"idComprador":True,"total":True})
         return pedido
 
-    def cancelarPedido(self,idPedido,cancelacion:PedidoCancelado):
-        pedido=self.bd.pedidos.find_one({"_id":ObjectId(idPedido)},
+    def cancelarPedido(self,idPedido,cancelacion:PedidoCancelado,idComprador):
+        pedido=self.bd.pedidos.find_one({"_id":ObjectId(idPedido),
+                                         "idComprador":idComprador},
                                         projection={"estatus":True})
         resp={"estatus":"","mensaje":""}
         if pedido:
@@ -109,7 +109,68 @@ class Conexion():
         lista=[]
         for ped in resultado:
             ped["idPedido"]=str(ped['idPedido'])
+            detalles=ped['detalle']
+            detalleTemp=[]
+            for prod in detalles:
+                self.complementarDetalle(prod)
+                detalleTemp.append(prod)
+            ped['detalle']=detalleTemp
+            if 'pago' in ped:
+                pago=ped['pago']
+                pago['noTarjeta']=self.consultarNoTarjeta(pago['idTarjeta'])
+                ped['pago']=pago
             lista.append(ped)
         resp["pedidos"]=lista
 
         return resp
+    def consultarProducto(self,idProducto):
+        producto=self.bd.productos.find_one({"_id":idProducto})
+        return producto
+    def complementarDetalle(self,detalle):
+        prod=self.consultarProducto(detalle['idProducto'])
+        detalle['nombreProducto']=prod['nombre']
+        return detalle
+    def consultarNoTarjeta(self,idTarjeta):
+        res=self.bd.usuarios.find_one({"tarjetas.idTarjeta":idTarjeta},
+                                      projection={"tarjetas.$":1,"_id":0})
+        tarjetas=res['tarjetas']
+        tarjeta=tarjetas[0]
+        return tarjeta['noTarjeta']
+
+    def consultarPedido(self,idPedido):
+        resp={"estatus":"","mensaje":""}
+        ped=self.bd.consultaPedidos.find_one({"idPedido":ObjectId(idPedido)})
+        print('hola')
+        if ped:
+            resp["estatus"]="OK"
+            resp["mensaje"]=f"Listado del pedido con id:{idPedido}"
+            ped["idPedido"]=str(ped['idPedido'])
+            detalles=ped['detalle']
+            detalleTemp=[]
+            for prod in detalles:
+                self.complementarDetalle(prod)
+                detalleTemp.append(prod)
+            ped['detalle']=detalleTemp
+            if 'pago' in ped:
+                pago=ped['pago']
+                pago['noTarjeta']=self.consultarNoTarjeta(pago['idTarjeta'])
+                ped['pago']=pago
+            resp["pedido"]=ped
+        else:
+            resp["estatus"]="Error"
+            resp["mensaje"]=f"El pedido con id:{idPedido} no existe"
+        return resp
+    def autenticar(self,email,password):
+        usuario=self.bd.usuarios.find_one({"email":email,
+                                           "password":password,
+                                           "estatus":"A"},
+                                          projection={"tarjetas":0})
+        salida={"estatus":"","mensaje":""}
+        if usuario:
+            salida["estatus"]="OK"
+            salida["mensaje"]="Usuario autenticado con exito"
+            salida["usuario"]=usuario
+        else:
+            salida["estatus"]="Error"
+            salida["mensaje"]="Datos incorrectos"
+        return salida

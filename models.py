@@ -1,5 +1,5 @@
 from pydantic import BaseModel,Field
-from datetime import datetime
+from datetime import datetime,date
 from typing import Optional
 
 class DetallePedido(BaseModel):
@@ -33,3 +33,64 @@ class PedidoPay(BaseModel):
 class PedidoCancelado(BaseModel):
     estatus:str=Field(default="Cancelado")
     motivoCancelacion:str
+
+class DetallePedidoConsulta(BaseModel):
+    idProducto:int
+    cantidad:int
+    precio:float
+    subtotal:float
+    costoEnvio:float
+    subtotalEnvio:float
+    nombreProducto:str
+
+class PagoConsulta(BaseModel):
+    fecha:datetime
+    monto:float
+    idTarjeta:int
+    estatus:str
+    noTarjeta:str
+class Comprador(BaseModel):
+    idComprador:int
+    nombre:str
+class Vendedor(BaseModel):
+    idVendedor:int
+    nombre:str
+
+class Pedido(BaseModel):
+    idPedido:str
+    fechaRegistro:datetime
+    fechaConfirmacion:datetime|None=None
+    fechaCierre:datetime|None=None
+    costosEnvio:float
+    subtotal:float
+    total:float
+    estatus:str
+    motivoCancelacion:str|None=None
+    valoracion:int|None=None
+    detalle:list[DetallePedidoConsulta]
+    pago:PagoConsulta|None=None
+    comprador:Comprador
+    vendedor:Vendedor
+
+class Respuesta(BaseModel):
+    estatus:str
+    mensaje:str
+
+class PedidosConsulta(Respuesta):
+    pedidos:list[Pedido]|None=None
+
+class PedidoConsulta(Respuesta):
+    pedido:Pedido|None=None
+
+class Usuario(BaseModel):
+    idUsuario:int=Field(alias="_id")
+    nombre:str
+    email:str
+    password:str
+    estatus:str
+    telefono:str
+    tipo:str
+    domicilio:str
+class UsuarioSalida(Respuesta):
+    usuario:Usuario|None=None
+
