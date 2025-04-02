@@ -1,10 +1,12 @@
 # This is a sample Python script.
 from fastapi import FastAPI,Depends,HTTPException,status
 import uvicorn
-from models import PedidoInsert,PedidoPay,PedidoCancelado,PedidosConsulta,PedidoConsulta,Respuesta,UsuarioSalida
+from models import PedidoInsert, PedidoPay, PedidoCancelado, PedidosConsulta, PedidoConsulta, Respuesta, UsuarioSalida, \
+    ProductosSalida
 from dao import Conexion
 from fastapi.responses import JSONResponse,Response,Any
 from fastapi.security import HTTPBasic, HTTPBasicCredentials
+from DAO.productosDAO import ProductoDAO
 # Press ⌃R to execute it or replace it with your code.
 # Press Double ⇧ to search everywhere for classes, files, tool windows, actions, and settings.
 app=FastAPI()
@@ -27,11 +29,8 @@ def inicio():
     return {"mensaje":"Bienvenido a PedidosREST"}
 
 def autenticar(credenciales:HTTPBasicCredentials=Depends(security))->UsuarioSalida:
-    try:
         salida=app.cn.autenticar(credenciales.username,credenciales.password)
         return UsuarioSalida(**salida)
-    except:
-        raise HTTPException(status.HTTP_401_UNAUTHORIZED,detail={"mensaje":"Usuario no autorizado"})
 
 @app.get('/usuarios/autenticar',response_model=UsuarioSalida,tags=["Usuario"])
 def login(usuario:UsuarioSalida=Depends(autenticar))->Any:
@@ -63,7 +62,8 @@ def cancelarPedido(idPedido:str,pedido:PedidoCancelado,
 
 @app.get('/pedidos',response_model=PedidosConsulta,summary=" Consulta general de pedidos",tags=["Pedidos"])
 def consultaGeneralPedidos(usuario:UsuarioSalida=Depends(autenticar))->Any:
-    print(usuario)
+#def consultaGeneralPedidos()->Any:
+    #print(usuario)
     if usuario.estatus=="OK" and (usuario.usuario.tipo=='Administrador' or
                                   usuario.usuario.tipo=="Comprador" or
                                   usuario.usuario.tipo=="Vendedor"):
@@ -77,7 +77,10 @@ def consultarPedido(idPedido:str)->Any:
     salida=app.cn.consultarPedido(idPedido)
     return PedidoConsulta(**salida)
 
-
+@app.get('/productos/test',response_model=ProductosSalida)
+def productostest()->Any:
+    productoDAO=ProductoDAO()
+    return productoDAO.consultaGeneral()
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
     uvicorn.run("main:app",port=8000,reload=True)

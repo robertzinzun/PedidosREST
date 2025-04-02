@@ -94,3 +94,17 @@ class Usuario(BaseModel):
 class UsuarioSalida(Respuesta):
     usuario:Usuario|None=None
 
+class Producto(BaseModel):
+    id:int=Field(alias='_id')
+    idCategoria:int
+    nombre: str
+    descripcion: str
+    precio: float
+    costoEnvio: float
+    existencia: float
+    color: str
+    marca: str
+    estatus: str
+    idVendedor: int
+class ProductosSalida(BaseModel):
+    productos:list[Producto]
